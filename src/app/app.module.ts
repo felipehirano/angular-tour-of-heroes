@@ -13,6 +13,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { InMemoryDataService } from './in-memory-data.service';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
+import { HeroesModule } from './heroes/heroes.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { HeroSearchComponent } from './hero-search/hero-search.component';
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
       dataEncapsulation: false,
     }),
+    HeroesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
