@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MessagesComponent } from './messages/messages.component';
 
-import { InMemoryDataService } from './in-memory-data.service';
+import { InMemoryDataService } from './repositories/in-memory/in-memory-data.service';
 import { HeroesModule } from './heroes/heroes.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 
