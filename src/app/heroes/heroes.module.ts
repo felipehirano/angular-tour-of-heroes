@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 import { HeroesRoutingModule } from './heroes-routing.module';
 import { HeroesComponent } from './heroes.component';
+import { HeroService } from './service/hero-service.service';
 
 @NgModule({
   declarations: [HeroesComponent, HeroDetailComponent],
   imports: [CommonModule, HeroesRoutingModule, FormsModule],
-  providers: [],
+  providers: [HeroService],
   bootstrap: [],
 })
 export class HeroesModule {}

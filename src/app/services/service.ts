@@ -1,29 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Hero } from '../dtos/hero';
 import { Observable, of } from 'rxjs';
-import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root',
-})
+import { LogHelper } from '../helpers/handle-errors/log-helpers';
+
+@Injectable()
 export class Service {
-  private heroesUrl = 'api/heroes';
+  private heroesUrl = 'anything/heroes';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  constructor(
-    private http: HttpClient,
-    private messageService: MessageService
-  ) {}
+  constructor(private http: HttpClient, private logHelper: LogHelper) {}
 
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl).pipe(
-      tap((_) => this.log('fetched heroes')),
-      catchError(this.handleError<Hero[]>('getHeroes', []))
+      tap((_) => this.logHelper.log('fetched heroes')),
+      catchError(this.logHelper.handleError<Hero[]>('getHeroes', []))
     );
   }
 
@@ -35,27 +31,10 @@ export class Service {
     return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
       tap((x) =>
         x.length
-          ? this.log(`found heroes matching "${term}"`)
-          : this.log(`no heroes matching "${term}"`)
+          ? this.logHelper.log(`found heroes matching "${term}"`)
+          : this.logHelper.log(`no heroes matching "${term}"`)
       ),
-      catchError(this.handleError<Hero[]>('searchHeroes', []))
+      catchError(this.logHelper.handleError<Hero[]>('searchHeroes', []))
     );
-  }
-
-  private log(message: string) {
-    this.messageService.add(`HeroService: ${message}`);
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
   }
 }

@@ -7,7 +7,6 @@ import { Hero } from '../../dtos/hero';
 })
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
-    console.log('Created Database');
     const heroes = [
       { id: 12, name: 'Dr. Nice' },
       { id: 13, name: 'Bombasto' },
@@ -19,7 +18,6 @@ export class InMemoryDataService implements InMemoryDbService {
       { id: 19, name: 'Magma' },
       { id: 20, name: 'Tornado' },
     ];
-    console.log({ heroes });
     return { heroes };
   }
 
