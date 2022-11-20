@@ -1,6 +1,6 @@
 <h2>My Heroes</h2>
 <ul class="heroes">
-  <li *ngFor="let hero of heroes">
+  <li *ngFor="let hero of heroesFacade.heroes">
     <a routerLink="/detail/{{ hero.id }}">
       <span class="badge">{{ hero.id }}</span> {{ hero.name }}
     </a>
@@ -8,7 +8,7 @@
       type="button"
       class="delete"
       title="delete hero"
-      (click)="delete(hero)"
+      (click)="heroesFacade.delete(hero)"
     >
       x
     </button>
@@ -23,7 +23,7 @@
   <button
     type="button"
     class="add-button"
-    (click)="add(heroName.value); heroName.value = ''"
+    (click)="heroesFacade.add(heroName.value); heroName.value = ''"
   >
     Add hero
   </button>
