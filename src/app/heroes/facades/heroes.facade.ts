@@ -1,32 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Hero } from 'src/app/dtos/hero';
 import { Service } from 'src/app/services/service';
-import { HeroesModelsStore } from '../models/heroes-models.store';
 import { HeroService } from '../service/hero-service.service';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class HeroesFacade {
   constructor(
     private heroService: HeroService,
     private service: Service,
-    private heroesModelsStore: HeroesModelsStore
+    private location: Location
   ) {}
 
   heroes: Hero[] = [];
   hero: Hero = {} as any;
 
   getHeroes(): void {
-    this.service.getHeroes().subscribe((heroes) => {
-      this.heroes = heroes;
-    });
+    this.service.getHeroes().subscribe((heroes) => (this.heroes = heroes));
   }
 
-  getHero(id: number): Hero {
-    this.setHero(id);
-    return this.heroesModelsStore.get();
-  }
-
-  setHero(id: number): void {
+  getHero(id: number): void {
     this.heroService
       .getHero(id)
       .subscribe((response) => (this.hero = response));
@@ -45,5 +38,15 @@ export class HeroesFacade {
   delete(hero: Hero): void {
     this.heroes = this.heroes.filter((h) => h !== hero);
     this.heroService.deleteHero(hero.id).subscribe();
+  }
+
+  update(): void {
+    if (this.hero.name) {
+      this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+    }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

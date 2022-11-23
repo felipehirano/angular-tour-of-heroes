@@ -1,8 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Hero } from '../../dtos/hero';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { HeroService } from '../service/hero-service.service';
 import { HeroesFacade } from '../facades/heroes.facade';
 
 @Component({
@@ -15,8 +12,6 @@ export class HeroDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private heroService: HeroService,
-    private location: Location,
     public heroesFacade: HeroesFacade
   ) {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -24,17 +19,5 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.heroesFacade.getHero(this.id);
-  }
-
-  goBack(): void {
-    this.location.back();
-  }
-
-  save(): void {
-    if (this.heroesFacade.hero) {
-      this.heroService
-        .updateHero(this.heroesFacade.hero)
-        .subscribe(() => this.goBack());
-    }
   }
 }
