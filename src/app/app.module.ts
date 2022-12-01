@@ -11,7 +11,6 @@ import { InMemoryDataService } from './repositories/in-memory/in-memory-data.ser
 import { HeroesModule } from './heroes/heroes.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { LogHelper } from './helpers/handle-errors/log-helpers';
-import { Service } from './services/service';
 
 @NgModule({
   declarations: [AppComponent, MessagesComponent],
@@ -25,7 +24,7 @@ import { Service } from './services/service';
     HeroesModule,
     DashboardModule,
   ],
-  providers: [Service, LogHelper],
+  providers: [LogHelper],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

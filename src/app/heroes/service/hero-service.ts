@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Hero } from 'src/app/dtos/hero';
-import { LogHelper } from 'src/app/helpers/handle-errors/log-helpers';
+import { LogHelper } from '../../helpers/handle-errors/log-helpers';
 
 @Injectable()
 export class HeroService {

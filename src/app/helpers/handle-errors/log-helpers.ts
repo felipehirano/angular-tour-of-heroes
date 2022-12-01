@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MessageService } from 'src/app/services/message.service';
+import { MessageService } from '../../services/message.service';
 
 @Injectable()
 export class LogHelper {

@@ -6,9 +6,11 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { LogHelper } from '../helpers/handle-errors/log-helpers';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class Service {
-  private heroesUrl = 'anything/heroes';
+  private heroesUrl = 'api/heroes';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
