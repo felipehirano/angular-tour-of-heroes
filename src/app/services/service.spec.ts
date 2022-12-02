@@ -4,6 +4,7 @@ import {
 } from '@angular/common/http/testing';
 
 import { getTestBed, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { LogHelper } from '../helpers/handle-errors/log-helpers';
 import { Service } from './service';
 
@@ -57,5 +58,31 @@ describe('HeroService', () => {
     expect(req.request.method).toBe('GET');
 
     req.flush(resultMock);
+  });
+
+  it('should not search heroes', () => {
+    const term = 123;
+    expect(() => service.searchHeroes(term as any)).toThrowError(
+      `term.trim is not a function`
+    );
+  });
+
+  it('should not search heroes with empty param', () => {
+    const term = '';
+    expect(JSON.stringify(service.searchHeroes(term))).toEqual(
+      JSON.stringify(of([]))
+    );
+  });
+
+  it('should search heroes', () => {
+    const term = 'b';
+
+    const resultMock = of([]);
+
+    const mockSearchHeroes = jest.spyOn(service, 'searchHeroes');
+    mockSearchHeroes.mockReturnValue(resultMock);
+
+    expect(service.searchHeroes(term)).toEqual(resultMock);
+    expect(mockSearchHeroes).toHaveBeenCalledTimes(1);
   });
 });
