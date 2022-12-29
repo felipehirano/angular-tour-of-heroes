@@ -37,7 +37,18 @@ describe('HeroService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should list heroes', () => {
+  it('should list heroes', (done) => {
+    const response = [
+      { id: 12, name: 'Dr. Nice' },
+      { id: 13, name: 'Bombasto' },
+      { id: 14, name: 'Celeritas' },
+      { id: 15, name: 'Magneta' },
+      { id: 16, name: 'RubberMan' },
+      { id: 17, name: 'Dynama' },
+      { id: 18, name: 'Dr. IQ' },
+      { id: 19, name: 'Magma' },
+    ];
+
     const resultMock = [
       { id: 12, name: 'Dr. Nice' },
       { id: 13, name: 'Bombasto' },
@@ -47,17 +58,17 @@ describe('HeroService', () => {
       { id: 17, name: 'Dynama' },
       { id: 18, name: 'Dr. IQ' },
       { id: 19, name: 'Magma' },
-      { id: 20, name: 'Tornado' },
     ];
 
-    service.getHeroes().subscribe((heroes) => {
-      expect(heroes).toEqual(resultMock);
+    service.getHeroes().subscribe((response) => {
+      expect(JSON.stringify(response)).toBe(JSON.stringify(resultMock));
+      done();
     });
 
     const req = httpMock.expectOne('api/heroes');
     expect(req.request.method).toBe('GET');
 
-    req.flush(resultMock);
+    req.flush(response);
   });
 
   it('should not search heroes', () => {
@@ -75,14 +86,16 @@ describe('HeroService', () => {
   });
 
   it('should search heroes', () => {
-    const term = 'b';
+    const term = 'RubberMan';
+    const response = [{ id: 12, name: 'Dr. Nice' }];
+    const expected = [{ id: 12, name: 'Dr. Nice' }];
 
-    const resultMock = of([]);
+    service.searchHeroes(term).subscribe((response) => {
+      expect(expected).toEqual(response);
+    });
 
-    const mockSearchHeroes = jest.spyOn(service, 'searchHeroes');
-    mockSearchHeroes.mockReturnValue(resultMock);
-
-    expect(service.searchHeroes(term)).toEqual(resultMock);
-    expect(mockSearchHeroes).toHaveBeenCalledTimes(1);
+    const req = httpMock.expectOne(`api/heroes/?name=${term}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(response);
   });
 });
