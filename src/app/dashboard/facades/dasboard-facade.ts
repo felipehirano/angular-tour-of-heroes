@@ -7,7 +7,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { Hero } from 'src/app/dtos/hero';
-import { Service } from 'src/app/services/service';
+import { Service } from '../../services/service';
 
 @Injectable()
 export class DashboardFacade {
