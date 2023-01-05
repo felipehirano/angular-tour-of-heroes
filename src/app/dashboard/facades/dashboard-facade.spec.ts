@@ -102,4 +102,34 @@ describe('HeroSearchComponent', () => {
 
     searchTermsMock.next('Bombasto');
   });
+
+  it('createSearchHeroTerms should transform search terms into heroes', () => {
+    const searchTermsMock = new Subject<string>();
+    dashBoardFacade['searchTerms'] = searchTermsMock;
+
+    const searchTerms = ['Bombasto', 'Celeritas', 'Magneta'];
+
+    const expectedHeroes = [
+      { id: 1, name: 'Bombasto' },
+      { id: 2, name: 'Celeritas' },
+      { id: 3, name: 'Magneta' },
+    ];
+    const searchHeroesMock = jest
+      .fn()
+      .mockReturnValueOnce(of([expectedHeroes[0]]))
+      .mockReturnValueOnce(of([expectedHeroes[1]]))
+      .mockReturnValueOnce(of([expectedHeroes[2]]));
+    (Service.prototype as any).searchHeroes = searchHeroesMock;
+
+    let index = 0;
+
+    searchTermsMock
+      .pipe(switchMap((value) => searchHeroesMock(value)))
+      .subscribe((value) => {
+        expect(value).toEqual([expectedHeroes[index]]);
+        index++;
+      });
+
+    searchTerms.forEach((term) => searchTermsMock.next(term));
+  });
 });
