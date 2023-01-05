@@ -1,9 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { Observable, of, Subject, switchMap } from 'rxjs';
 import { Service } from '../../services/service';
 import { LogHelper } from '../../helpers/handle-errors/log-helpers';
 import { DashboardFacade } from './dasboard-facade';
+import { Hero } from '../../dtos/hero';
+import { ConstantPool } from '@angular/compiler';
 
 describe('HeroSearchComponent', () => {
   let dashBoardFacade: DashboardFacade;
@@ -75,22 +77,28 @@ describe('HeroSearchComponent', () => {
   });
 
   it('should create search hero terms', () => {
+    dashBoardFacade.createSearchHeroTerms();
+    expect(dashBoardFacade.heroes$).toMatchObject(
+      (dashBoardFacade as any).searchTerms
+    );
+  });
+
+  it('should search hero with term specificied', () => {
+    const mockReturnValue = [{ id: 13, name: 'Bombasto' }];
+    const searchHeroesMock = jest.fn().mockReturnValue(of(mockReturnValue));
+
+    (Service.prototype as any).searchHeroes = searchHeroesMock;
+
+    dashBoardFacade.heroes$ = of([]);
+
     const searchTermsMock = new Subject<string>();
     (dashBoardFacade as any).searchTerms = searchTermsMock;
 
-    const mockSearchHeroes = jest.spyOn(
-      Service.prototype as any,
-      'searchHeroes'
-    );
-    mockSearchHeroes.mockReturnValue(of([]));
-
-    dashBoardFacade.createSearchHeroTerms();
-
-    searchTermsMock.subscribe(() => {
-      expect((Service.prototype as any).searchHeroes).toHaveBeenCalledWith(
-        'Bombasto'
-      );
-    });
+    searchTermsMock
+      .pipe(switchMap((value) => searchHeroesMock(value)))
+      .subscribe((value) => {
+        expect(value).toEqual(mockReturnValue);
+      });
 
     searchTermsMock.next('Bombasto');
   });
